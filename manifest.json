@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Prompt Vault",
+  "version": "2.0.0",
+  "description": "The ultimate AI prompt manager. Never lose a prompt again.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Prompt Vault"
+  }
+}
