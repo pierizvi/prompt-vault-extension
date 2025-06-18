@@ -109,8 +109,8 @@ function renderPrompts() {
     return;
   }
 
-  elements.promptsList.innerHTML = state.filteredPrompts.map(prompt => `
-    <div class="prompt-card" data-id="${prompt.id}" style="--platform-color: ${prompt.platformColor || '#666'}">
+  elements.promptsList.innerHTML = state.filteredPrompts.map((prompt, index) => `
+    <div class="prompt-card" data-id="${prompt.id}" style="--platform-color: ${prompt.platformColor || '#666'}; animation-delay: ${index * 0.05}s">
       <div class="prompt-header">
         <div class="prompt-meta">
           <div class="platform-badge" style="background: ${prompt.platformColor || '#666'}">
@@ -177,7 +177,7 @@ function handleActionClick(e) {
   }
 }
 
-// Show modal
+// Show modal with smooth animation
 function showModal(prompt) {
   elements.modalIcon.textContent = prompt.platformIcon || '🤖';
   elements.modalPlatform.textContent = prompt.platform;
@@ -185,7 +185,13 @@ function showModal(prompt) {
   elements.modalText.textContent = prompt.text;
   elements.modalWords.textContent = prompt.wordCount || 0;
   elements.modalChars.textContent = prompt.charCount || 0;
+  
   elements.modal.style.display = 'block';
+  elements.modal.style.opacity = '0';
+  
+  requestAnimationFrame(() => {
+    elements.modal.style.opacity = '1';
+  });
 }
 
 // Copy text to clipboard
@@ -198,17 +204,33 @@ async function copyText(text) {
   }
 }
 
-// Show toast notification
+// Show toast notification with enhanced animation
 function showToast(message) {
   const existing = document.querySelector('.toast');
-  if (existing) existing.remove();
+  if (existing) {
+    existing.style.animation = 'none';
+    existing.offsetHeight; // Force reflow
+    existing.remove();
+  }
   
   const toast = document.createElement('div');
   toast.className = 'toast';
   toast.textContent = message;
+  toast.style.opacity = '0';
   document.body.appendChild(toast);
   
-  setTimeout(() => toast.remove(), 3000);
+  // Smooth fade in
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.animation = 'slideUpToast 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+  });
+  
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.style.animation = 'slideDownToast 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      setTimeout(() => toast.remove(), 300);
+    }
+  }, 2500);
 }
 
 // Escape HTML
@@ -282,14 +304,20 @@ function setupEventListeners() {
     }
   });
 
-  // Modal close
+  // Modal close with smooth animation
   elements.modalClose.addEventListener('click', () => {
-    elements.modal.style.display = 'none';
+    elements.modal.style.opacity = '0';
+    setTimeout(() => {
+      elements.modal.style.display = 'none';
+    }, 200);
   });
 
   elements.modal.addEventListener('click', (e) => {
     if (e.target === elements.modal) {
-      elements.modal.style.display = 'none';
+      elements.modal.style.opacity = '0';
+      setTimeout(() => {
+        elements.modal.style.display = 'none';
+      }, 200);
     }
   });
 
