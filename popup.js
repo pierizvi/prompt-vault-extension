@@ -95,7 +95,7 @@ function formatTime(timestamp) {
     year: time.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
   });
 }
-
+//render new ones******newones**
 // Render prompts
 function renderPrompts() {
   if (state.filteredPrompts.length === 0) {
