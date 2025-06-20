@@ -69,6 +69,8 @@ async function loadPrompts() {
 }
 
 // Update statistics
+
+//overwhelming 
 function updateStats() {
   const totalWords = state.prompts.reduce((sum, p) => sum + (p.wordCount || 0), 0);
   const platforms = [...new Set(state.prompts.map(p => p.platform))];
