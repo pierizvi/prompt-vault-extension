@@ -1,4 +1,4 @@
-# PROMPT RESERVE
+# Prompt Vault
 **Prompt Reserve & Research Tool**
 
 ---
