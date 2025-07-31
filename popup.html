@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  <meta charset="UTF-8">
+<head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prompt Vault</title>
   <style>
@@ -9,300 +10,393 @@
       padding: 0;
       box-sizing: border-box;
     }
-      :root {
-      --primary: #0a0a0a;
-      --secondary: #8b8b8b;
-      --tertiary: #b3b3b3;
-      --background: #fefefe;
-      --surface: #fbfbfb;
-      --border: #f0f0f0;
-      --hover: #f7f7f7;
-      --success: #10b981;
-      --danger: #ef4444;
-      --radius: 16px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.04);
-      --shadow-hover: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08);
-      --shadow-modal: 0 20px 60px rgba(0,0,0,0.12);
-      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+    :root {
+      /* Light mode colors */
+      --primary: #2c3e50;
+      --primary-hover: #34495e;
+      --secondary: #7f8c8d;
+      --accent: #34495e;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --surface: #ffffff;
+      --surface-alt: #f8f9fa;
+      --surface-hover: #ecf0f1;
+      --border: #bdc3c7;
+      --border-dark: #95a5a6;
+      --text-primary: #2c3e50;
+      --text-secondary: #34495e;
+      --text-muted: #7f8c8d;
+      --text-light: #95a5a6;
+      --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      --shadow-hover: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     }
-      body {
-      width: 480px;
+
+    /* Dark mode colors */
+    [data-theme="dark"] {
+      --primary: #3498db;
+      --primary-hover: #2980b9;
+      --secondary: #95a5a6;
+      --accent: #3498db;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --surface: #1a1a1a;
+      --surface-alt: #2c2c2c;
+      --surface-hover: #3a3a3a;
+      --border: #404040;
+      --border-dark: #666666;
+      --text-primary: #ecf0f1;
+      --text-secondary: #bdc3c7;
+      --text-muted: #95a5a6;
+      --text-light: #7f8c8d;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.5);
+      --shadow-hover: 0 3px 6px rgba(0,0,0,0.4), 0 3px 6px rgba(0,0,0,0.6);
+    }
+
+    body {
+      width: 420px;
       height: 650px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Segoe UI', sans-serif;
-      background: var(--background);
-      color: var(--primary);
-      overflow: hidden;
-      font-size: 13px;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      font-family: "Times New Roman", Times, serif;
+      background: var(--surface);
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.4;
+      -webkit-font-smoothing: auto;
+      -moz-osx-font-smoothing: auto;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     
     .container {
       height: 100%;
       display: flex;
       flex-direction: column;
+      border: 2px solid var(--border-dark);
+      transition: border-color 0.3s ease;
     }
     
-    /* Header */
+    /* Newspaper Header */
     .header {
-      background: rgba(254, 254, 254, 0.8);
-      padding: 24px;
+      background: var(--surface);
+      border-bottom: 3px double var(--border-dark);
+      padding: 16px 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .masthead {
       border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .logo {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--primary) 0%, #3a3a3a 100%);
-      color: white;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 600;
-      box-shadow: var(--shadow);
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      transition: border-color 0.3s ease;
     }
     
     .brand-name {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--text-primary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      font-family: "Times New Roman", serif;
+      transition: color 0.3s ease;
     }
     
+    .tagline {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+    
+    .header-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .edition-info {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
+    }
+    
+    /* Theme and Recording Controls */
+    .controls-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    /* Theme Toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .theme-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color 0.3s ease;
+    }
+    
+    .theme-switch {
+      width: 40px;
+      height: 18px;
+      border: 1px solid var(--border-dark);
+      background: var(--surface-alt);
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .theme-switch.dark {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    
+    .theme-knob {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 14px;
+      height: 14px;
+      background: var(--text-primary);
+      transition: all 0.3s ease;
+      font-size: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--surface);
+      font-weight: bold;
+    }
+    
+    .theme-switch.dark .theme-knob {
+      transform: translateX(20px);
+      background: var(--surface);
+      color: var(--text-primary);
+    }
+    
+    /* Classic Toggle */
     .toggle-container {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
     }
     
     .toggle-label {
-      font-size: 12px;
-      color: var(--secondary);
-      font-weight: 500;
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: color 0.3s ease;
     }
     
     .toggle {
-      width: 44px;
-      height: 24px;
-      background: var(--border);
-      border-radius: 12px;
+      width: 50px;
+      height: 20px;
+      border: 2px solid var(--border-dark);
+      background: var(--surface);
       position: relative;
       cursor: pointer;
-      transition: var(--transition);
-      border: 1px solid transparent;
+      transition: all 0.3s ease;
     }
     
     .toggle.active {
       background: var(--success);
-      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+      border-color: var(--success);
     }
     
     .toggle-knob {
       position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 18px;
-      height: 18px;
-      background: white;
-      border-radius: 50%;
-      transition: var(--transition);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      top: 1px;
+      left: 1px;
+      width: 16px;
+      height: 16px;
+      background: var(--text-primary);
+      transition: all 0.3s ease;
     }
     
     .toggle.active .toggle-knob {
-      transform: translateX(20px);
+      transform: translateX(26px);
+      background: var(--surface);
     }
     
+    /* Statistics Section */
     .stats {
-      display: flex;
-      gap: 32px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-dark);
+      border: 1px solid var(--border-dark);
+      transition: all 0.3s ease;
     }
     
     .stat {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      text-align: center;
+      padding: 10px 8px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+    
+    .stat:last-child {
+      border-right: none;
     }
     
     .stat-value {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+      display: block;
+      font-family: "Times New Roman", serif;
+      transition: color 0.3s ease;
     }
     
     .stat-label {
-      font-size: 11px;
-      color: var(--tertiary);
-      font-weight: 500;
+      font-size: 9px;
+      color: var(--text-muted);
+      font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+      transition: color 0.3s ease;
     }
     
-    /* Search */
+    /* Search Section */
     .search-container {
-      padding: 16px 24px;
-      background: var(--surface);
+      padding: 16px 20px;
+      background: var(--surface-alt);
       border-bottom: 1px solid var(--border);
+      transition: all 0.3s ease;
     }
     
     .search-box {
       position: relative;
     }
     
-    .search-icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      opacity: 0.4;
-      transition: var(--transition-fast);
-    }
-    
     .search-input {
       width: 100%;
-      padding: 14px 16px 14px 44px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      padding: 8px 12px 8px 32px;
+      background: var(--surface);
+      border: 2px solid var(--border);
       font-size: 13px;
-      background: var(--background);
-      transition: var(--transition);
-      font-weight: 400;
+      color: var(--text-primary);
+      font-family: "Times New Roman", serif;
+      transition: all 0.3s ease;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-light);
+      font-style: italic;
     }
     
     .search-input:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.04);
-    }
-    
-    .search-input:focus + .search-icon {
-      opacity: 0.6;
-    }
-    
-    /* Prompts List */
-    .prompts-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px 24px;
       background: var(--surface);
     }
     
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+    }
+    
+    /* Articles List */
+    .prompts-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      background: var(--surface);
+      transition: background-color 0.3s ease;
+    }
+    
     .prompts-container::-webkit-scrollbar {
-      width: 6px;
+      width: 8px;
     }
     
     .prompts-container::-webkit-scrollbar-track {
-      background: transparent;
+      background: var(--surface-alt);
     }
     
     .prompts-container::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-      transition: var(--transition-fast);
-    }
-    
-    .prompts-container::-webkit-scrollbar-thumb:hover {
-      background: var(--secondary);
+      background: var(--border-dark);
+      border: 1px solid var(--border);
     }
     
     .prompt-card {
-      background: var(--background);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
       cursor: pointer;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-      animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+      transition: all 0.3s ease;
     }
     
     .prompt-card:hover {
-      border-color: rgba(10, 10, 10, 0.1);
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-1px);
+      background: var(--surface-alt);
+      margin: 0 -20px;
+      padding: 16px 20px;
     }
     
-    .prompt-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 3px;
-      height: 100%;
-      background: var(--platform-color, var(--secondary));
-      opacity: 0;
-      transition: var(--transition);
-    }
-    
-    .prompt-card:hover::before {
-      opacity: 1;
+    .prompt-card:last-child {
+      border-bottom: none;
     }
     
     .prompt-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      align-items: flex-start;
+      margin-bottom: 8px;
     }
     
     .prompt-meta {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
+      gap: 4px;
     }
     
     .platform-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      background: var(--platform-color, var(--secondary));
-      color: white;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      backdrop-filter: blur(10px);
-    }
-    
-    .platform-icon {
-      font-size: 12px;
+      font-size: 10px;
+      font-weight: bold;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      border: 1px solid var(--border-dark);
+      background: var(--surface-alt);
+      display: inline-block;
+      width: fit-content;
+      transition: all 0.3s ease;
     }
     
     .prompt-time {
-      font-size: 11px;
-      color: var(--tertiary);
-      font-weight: 500;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-style: italic;
+      transition: color 0.3s ease;
     }
     
     .prompt-actions {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       opacity: 0;
-      transition: var(--transition);
+      transition: opacity 0.2s ease;
     }
     
     .prompt-card:hover .prompt-actions {
@@ -310,148 +404,146 @@
     }
     
     .action-btn {
-      width: 28px;
-      height: 28px;
-      border: 1px solid var(--border);
-      background: var(--background);
-      border-radius: 8px;
+      width: 24px;
+      height: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: var(--transition);
-      font-size: 13px;
-      backdrop-filter: blur(10px);
+      font-size: 10px;
+      font-weight: bold;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
     }
     
     .action-btn:hover {
-      background: var(--hover);
+      background: var(--primary);
       border-color: var(--primary);
-      transform: scale(1.05);
+      color: var(--surface);
     }
     
-    .action-btn:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(10, 10, 10, 0.1);
-    }
-    
-    .action-btn:active {
-      transform: scale(0.95);
-    }    .prompt-text {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--secondary);
+    .prompt-headline {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 6px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      white-space: pre-wrap;
-      word-break: break-word;
-      margin: 10px 0;
       cursor: pointer;
-      font-weight: 400;
+      transition: color 0.3s ease;
     }
+
+    .prompt-headline:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+    
+    .prompt-text {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-secondary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin: 6px 0;
+      font-family: "Times New Roman", serif;
+      transition: color 0.3s ease;
+    }    
     
     .prompt-footer {
       display: flex;
-      gap: 20px;
-      margin-top: 14px;
-      font-size: 11px;
-      color: var(--tertiary);
+      gap: 16px;
+      font-size: 10px;
+      color: var(--text-light);
+      border-top: 1px dotted var(--border);
+      padding-top: 6px;
+      margin-top: 8px;
+      transition: all 0.3s ease;
     }
     
     .prompt-stat {
       display: flex;
       align-items: center;
-      gap: 5px;
-      font-weight: 500;
+      gap: 4px;
+      font-weight: normal;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
     /* Empty State */
     .empty-state {
       text-align: center;
       padding: 60px 20px;
-    }
-    
-    .empty-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-      opacity: 0.15;
-      filter: grayscale(100%);
+      border: 2px dashed var(--border);
+      margin: 20px 0;
+      transition: border-color 0.3s ease;
     }
     
     .empty-title {
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 18px;
+      font-weight: bold;
       margin-bottom: 8px;
-      color: var(--primary);
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
     }
     
     .empty-text {
-      color: var(--secondary);
-      line-height: 1.6;
+      color: var(--text-secondary);
+      line-height: 1.4;
       font-size: 12px;
-      max-width: 280px;
-      margin: 0 auto;
+      font-style: italic;
+      transition: color 0.3s ease;
     }
     
     /* Footer */
     .footer {
       display: flex;
-      gap: 8px;
-      padding: 16px 24px;
-      background: rgba(254, 254, 254, 0.8);
-      border-top: 1px solid var(--border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      gap: 1px;
+      background: var(--border-dark);
+      border-top: 2px solid var(--border-dark);
+      transition: all 0.3s ease;
     }
     
     .btn {
       flex: 1;
       padding: 12px 16px;
-      border: 1px solid var(--border);
-      background: var(--background);
-      border-radius: var(--radius);
-      font-size: 12px;
-      font-weight: 600;
+      background: var(--surface);
+      border: none;
+      font-size: 11px;
+      font-weight: bold;
       cursor: pointer;
-      transition: var(--transition);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      backdrop-filter: blur(10px);
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: "Times New Roman", serif;
+      transition: all 0.3s ease;
     }
     
     .btn:hover {
-      background: var(--hover);
-      border-color: var(--primary);
-      transform: translateY(-1px);
-    }
-    
-    .btn:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(10, 10, 10, 0.1);
-    }
-    
-    .btn:active {
-      transform: translateY(0);
+      background: var(--surface-hover);
     }
     
     .btn-primary {
       background: var(--primary);
-      color: white;
-      border-color: var(--primary);
+      color: var(--surface);
     }
     
     .btn-primary:hover {
-      background: #1a1a1a;
-      transform: translateY(-1px);
-    }
-    
-    .btn-primary:active {
-      transform: translateY(0);
+      background: var(--primary-hover);
     }
     
     .btn-danger {
@@ -460,13 +552,7 @@
     
     .btn-danger:hover {
       background: var(--danger);
-      color: white;
-      border-color: var(--danger);
-      transform: translateY(-1px);
-    }
-    
-    .btn-danger:active {
-      transform: translateY(0);
+      color: var(--surface);
     }
     
     /* Modal */
@@ -477,10 +563,13 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(44, 62, 80, 0.8);
       z-index: 1000;
-      backdrop-filter: blur(8px);
-      animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background-color 0.3s ease;
+    }
+    
+    [data-theme="dark"] .modal {
+      background: rgba(0, 0, 0, 0.9);
     }
     
     .modal-content {
@@ -488,182 +577,189 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: var(--background);
-      padding: 32px;
-      border-radius: 20px;
+      background: var(--surface);
+      border: 3px solid var(--border-dark);
       width: 90%;
-      max-width: 520px;
+      max-width: 500px;
       max-height: 80vh;
       overflow-y: auto;
-      box-shadow: var(--shadow-modal);
-      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid var(--border);
+      transition: all 0.3s ease;
     }
     
     .modal-header {
+      background: var(--surface-alt);
+      padding: 16px 20px;
+      border-bottom: 2px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      transition: all 0.3s ease;
     }
     
     .modal-title {
       font-size: 16px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-weight: bold;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
     }
     
     .modal-close {
-      width: 32px;
-      height: 32px;
-      border: none;
+      width: 28px;
+      height: 28px;
       background: var(--surface);
-      border-radius: 10px;
+      border: 2px solid var(--border-dark);
       cursor: pointer;
       font-size: 16px;
-      color: var(--secondary);
+      font-weight: bold;
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: var(--transition);
+      transition: all 0.3s ease;
     }
     
     .modal-close:hover {
-      background: var(--hover);
-      color: var(--primary);
-      transform: scale(1.05);
+      background: var(--danger);
+      border-color: var(--danger);
+      color: var(--surface);
     }
     
     .modal-info {
       display: flex;
       gap: 20px;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
+      padding: 12px 20px;
+      background: var(--surface-alt);
       border-bottom: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--secondary);
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
     }
     
     .modal-text {
-      background: var(--surface);
-      padding: 24px;
-      border-radius: var(--radius);
+      padding: 20px;
       font-size: 13px;
-      line-height: 1.8;
+      line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-word;
-      margin-bottom: 28px;
-      border-left: 3px solid var(--primary);
-      color: var(--primary);
-      font-weight: 400;
+      color: var(--text-primary);
+      font-family: "Times New Roman", serif;
+      border-left: 4px solid var(--primary);
+      background: var(--surface);
+      margin: 0;
+      transition: all 0.3s ease;
     }
     
     .modal-actions {
       display: flex;
-      gap: 8px;
-    }
-    
-    /* Animations */
-    @keyframes fadeIn {
-      from { 
-        opacity: 0; 
-      }
-      to { 
-        opacity: 1; 
-      }
-    }
-    
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -45%) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
+      gap: 1px;
+      background: var(--border-dark);
+      border-top: 2px solid var(--border-dark);
+      transition: all 0.3s ease;
     }
     
     /* Toast */
     .toast {
       position: fixed;
-      bottom: 24px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--primary);
-      color: white;
+      background: var(--text-primary);
+      color: var(--surface);
       padding: 12px 20px;
-      border-radius: var(--radius);
       font-size: 12px;
-      font-weight: 500;
-      box-shadow: var(--shadow-hover);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 2px solid var(--border-dark);
       z-index: 2000;
-      animation: slideUpToast 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      backdrop-filter: blur(10px);
+      animation: slideUpToast 0.3s ease;
+      font-family: "Times New Roman", serif;
+      transition: all 0.3s ease;
     }
     
+    /* Hide emojis in newspaper style */
+    .platform-icon,
+    .empty-icon {
+      display: none;
+    }
+    
+    /* Animations */
     @keyframes slideUpToast {
       from {
         opacity: 0;
-        transform: translate(-50%, 20px) scale(0.95);
+        transform: translate(-50%, 20px);
       }
       to {
         opacity: 1;
-        transform: translate(-50%, 0) scale(1);
+        transform: translate(-50%, 0);
       }
     }
-    
-    @keyframes slideDownToast {
-      from {
-        opacity: 1;
-        transform: translate(-50%, 0) scale(1);
-      }
-      to {
-        opacity: 0;
-        transform: translate(-50%, 20px) scale(0.95);
-      }
+
+    /* Typography Enhancements */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Times New Roman", Times, serif;
+      font-weight: bold;
     }
     
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .serif {
+      font-family: "Times New Roman", Times, serif;
+    }
+    
+    .caps {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .small-caps {
+      font-variant: small-caps;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">      <div class="header-top">
-        <div class="brand">
-          <div class="logo">V</div>
-          <div class="brand-name">Prompt Vault</div>
+    <div class="header">
+      <div class="masthead">
+        <div class="brand-name">Prompt Vault</div>
+        <div class="tagline">Prompt Reserve & Research Tool</div>
+      </div>
+      
+      <div class="header-controls">
+        <div class="edition-info">
+          <span id="currentDate">Ongoing</span>
         </div>
-        <div class="toggle-container">
-          <span class="toggle-label">Recording</span>
-          <div class="toggle" id="toggle">
-            <div class="toggle-knob"></div>
+        <div class="controls-group">
+          <div class="theme-toggle">
+            <span class="theme-label">Mode</span>
+            <div class="theme-switch" id="themeSwitch">
+              <div class="theme-knob">L</div>
+            </div>
+          </div>
+          <div class="toggle-container">
+            <span class="toggle-label">Recording</span>
+            <div class="toggle" id="toggle">
+              <div class="toggle-knob"></div>
+            </div>
           </div>
         </div>
       </div>
+      
       <div class="stats">
         <div class="stat">
-          <div class="stat-value" id="totalPrompts">0</div>
-          <div class="stat-label">Prompts</div>
+          <span class="stat-value" id="totalPrompts">0</span>
+          <span class="stat-label">Prompts</span>
         </div>
         <div class="stat">
-          <div class="stat-value" id="totalWords">0</div>
-          <div class="stat-label">Words</div>
+          <span class="stat-value" id="totalWords">0</span>
+          <span class="stat-label">Words</span>
         </div>
         <div class="stat">
-          <div class="stat-value" id="platformCount">0</div>
-          <div class="stat-label">Platforms</div>
+          <span class="stat-value" id="platformCount">0</span>
+          <span class="stat-label">Platforms</span>
         </div>
       </div>
     </div>
@@ -673,25 +769,23 @@
         <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
-        <input type="text" class="search-input" placeholder="Search prompts..." id="searchInput" autocomplete="off">
+        <input type="text" class="search-input" placeholder="Search archives..." id="searchInput" autocomplete="off">
       </div>
     </div>
-      <div class="prompts-container" id="promptsList">
+    
+    <div class="prompts-container" id="promptsList">
       <div class="empty-state">
-        <div class="empty-icon">🚀</div>
-        <div class="empty-title">Welcome to Prompt Vault</div>
-        <div class="empty-text">Visit any AI platform and your prompts will be automatically saved here</div>
+        <div class="empty-title">Archive Empty</div>
+        <div class="empty-text">Visit AI platforms to begin collecting prompts for your research archive</div>
       </div>
     </div>
     
     <div class="footer">
       <button class="btn btn-primary" id="exportBtn">
-        <span>📥</span>
-        <span>Export All</span>
+        <span>Export Prompts</span>
       </button>
       <button class="btn btn-danger" id="clearBtn">
-        <span>🗑️</span>
-        <span>Clear All</span>
+        <span>Clear Prompts</span>
       </button>
     </div>
   </div>
@@ -701,33 +795,39 @@
       <div class="modal-header">
         <div class="modal-title">
           <span id="modalIcon"></span>
-          <span id="modalPlatform"></span>
+          <span id="modalPlatform">Article Details</span>
         </div>
         <button class="modal-close" id="modalClose">×</button>
       </div>
       <div class="modal-info">
-        <span>📅 <span id="modalTime"></span></span>
-        <span>💬 <span id="modalWords"></span> words</span>
-        <span>🔤 <span id="modalChars"></span> chars</span>
+        <span>Date: <span id="modalTime"></span></span>
+        <span>Words: <span id="modalWords"></span></span>
+        <span>Characters: <span id="modalChars"></span></span>
       </div>
       <div class="modal-text" id="modalText"></div>
       <div class="modal-actions">
         <button class="btn" id="copyBtn">
-          <span>📋</span>
           <span>Copy Text</span>
         </button>
         <button class="btn" id="copyUrlBtn">
-          <span>🔗</span>
-          <span>Copy URL</span>
+          <span>Copy Source</span>
         </button>
         <button class="btn btn-primary" id="openBtn">
-          <span>↗️</span>
-          <span>Open Chat</span>
+          <span>View Chat</span>
         </button>
       </div>
     </div>
   </div>
   
+  <script>
+    // Set current date
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  </script>
   <script src="popup.js"></script>
 </body>
 </html>

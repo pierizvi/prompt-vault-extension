@@ -2,7 +2,8 @@ const state = {
   prompts: [],
   filteredPrompts: [],
   currentPrompt: null,
-  isRecording: true
+  isRecording: true,
+  theme: 'light'
 };
 
 // Elements
@@ -11,6 +12,7 @@ const elements = {
   totalWords: document.getElementById('totalWords'),
   platformCount: document.getElementById('platformCount'),
   toggle: document.getElementById('toggle'),
+  themeSwitch: document.getElementById('themeSwitch'),
   searchInput: document.getElementById('searchInput'),
   promptsList: document.getElementById('promptsList'),
   exportBtn: document.getElementById('exportBtn'),
@@ -30,9 +32,45 @@ const elements = {
 
 // Initialize
 async function init() {
+  await loadTheme();
   await loadRecordingStatus();
   await loadPrompts();
   setupEventListeners();
+}
+
+// Load theme
+async function loadTheme() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['theme'], (result) => {
+      state.theme = result.theme || 'light';
+      updateThemeUI();
+      resolve();
+    });
+  });
+}
+
+// Update theme UI
+function updateThemeUI() {
+  const body = document.body;
+  const themeKnob = elements.themeSwitch.querySelector('.theme-knob');
+  
+  if (state.theme === 'dark') {
+    body.setAttribute('data-theme', 'dark');
+    elements.themeSwitch.classList.add('dark');
+    themeKnob.textContent = 'D';
+  } else {
+    body.removeAttribute('data-theme');
+    elements.themeSwitch.classList.remove('dark');
+    themeKnob.textContent = 'L';
+  }
+}
+
+// Toggle theme
+async function toggleTheme() {
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  await chrome.storage.local.set({ theme: state.theme });
+  updateThemeUI();
+  showToast(`${state.theme === 'dark' ? 'Dark' : 'Light'} mode enabled`);
 }
 
 // Load recording status
@@ -69,8 +107,6 @@ async function loadPrompts() {
 }
 
 // Update statistics
-
-//overwhelming 
 function updateStats() {
   const totalWords = state.prompts.reduce((sum, p) => sum + (p.wordCount || 0), 0);
   const platforms = [...new Set(state.prompts.map(p => p.platform))];
@@ -97,44 +133,40 @@ function formatTime(timestamp) {
     year: time.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
   });
 }
-//render new ones******newones**
-// Render prompts
+
+// Render prompts (clean newspaper style - no emojis)
 function renderPrompts() {
   if (state.filteredPrompts.length === 0) {
     elements.promptsList.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">${state.prompts.length > 0 ? '🔍' : '🚀'}</div>
-        <div class="empty-title">${state.prompts.length > 0 ? 'No matches found' : 'Welcome to Prompt Vault Pro'}</div>
-        <div class="empty-text">${state.prompts.length > 0 ? 'Try adjusting your search' : 'Visit any AI platform and your prompts will be automatically saved here'}</div>
+        <div class="empty-title">${state.prompts.length > 0 ? 'No matches found' : 'Archive Empty'}</div>
+        <div class="empty-text">${state.prompts.length > 0 ? 'Try adjusting your search terms' : 'Visit AI platforms to begin collecting prompts for your research archive'}</div>
       </div>
     `;
     return;
   }
 
   elements.promptsList.innerHTML = state.filteredPrompts.map((prompt, index) => `
-    <div class="prompt-card" data-id="${prompt.id}" style="--platform-color: ${prompt.platformColor || '#666'}; animation-delay: ${index * 0.05}s">
+    <div class="prompt-card" data-id="${prompt.id}" style="animation-delay: ${index * 0.05}s">
       <div class="prompt-header">
         <div class="prompt-meta">
-          <div class="platform-badge" style="background: ${prompt.platformColor || '#666'}">
-            <span class="platform-icon">${prompt.platformIcon || '🤖'}</span>
+          <div class="platform-badge">
             <span>${prompt.platform}</span>
           </div>
           <span class="prompt-time">${formatTime(prompt.timestamp)}</span>
         </div>
         <div class="prompt-actions">
-          <button class="action-btn" data-action="copy" data-id="${prompt.id}" title="Copy text">📋</button>
-          <button class="action-btn" data-action="open" data-id="${prompt.id}" title="Open chat">↗️</button>
+          <button class="action-btn" data-action="copy" data-id="${prompt.id}" title="Copy text">C</button>
+          <button class="action-btn" data-action="open" data-id="${prompt.id}" title="Open chat">O</button>
         </div>
       </div>
       <div class="prompt-text">${escapeHtml(prompt.text)}</div>
       <div class="prompt-footer">
         <div class="prompt-stat">
-          <span>💬</span>
           <span>${prompt.wordCount || 0} words</span>
         </div>
         <div class="prompt-stat">
-          <span>🔤</span>
-          <span>${prompt.charCount || 0} chars</span>
+          <span>${prompt.charCount || prompt.text.length} chars</span>
         </div>
       </div>
     </div>
@@ -181,12 +213,12 @@ function handleActionClick(e) {
 
 // Show modal with smooth animation
 function showModal(prompt) {
-  elements.modalIcon.textContent = prompt.platformIcon || '🤖';
+  elements.modalIcon.textContent = '';
   elements.modalPlatform.textContent = prompt.platform;
   elements.modalTime.textContent = new Date(prompt.timestamp).toLocaleString();
   elements.modalText.textContent = prompt.text;
-  elements.modalWords.textContent = prompt.wordCount || 0;
-  elements.modalChars.textContent = prompt.charCount || 0;
+  elements.modalWords.textContent = prompt.wordCount || prompt.text.split(/\s+/).length;
+  elements.modalChars.textContent = prompt.charCount || prompt.text.length;
   
   elements.modal.style.display = 'block';
   elements.modal.style.opacity = '0';
@@ -200,37 +232,27 @@ function showModal(prompt) {
 async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
-    showToast('✅ Copied to clipboard');
+    showToast('Copied to clipboard');
   } catch (err) {
-    showToast('❌ Copy failed');
+    showToast('Copy failed');
   }
 }
 
-// Show toast notification with enhanced animation
+// Show toast notification
 function showToast(message) {
   const existing = document.querySelector('.toast');
   if (existing) {
-    existing.style.animation = 'none';
-    existing.offsetHeight; // Force reflow
     existing.remove();
   }
   
   const toast = document.createElement('div');
   toast.className = 'toast';
   toast.textContent = message;
-  toast.style.opacity = '0';
   document.body.appendChild(toast);
-  
-  // Smooth fade in
-  requestAnimationFrame(() => {
-    toast.style.opacity = '1';
-    toast.style.animation = 'slideUpToast 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
-  });
   
   setTimeout(() => {
     if (toast.parentNode) {
-      toast.style.animation = 'slideDownToast 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-      setTimeout(() => toast.remove(), 300);
+      toast.remove();
     }
   }, 2500);
 }
@@ -244,12 +266,15 @@ function escapeHtml(text) {
 
 // Setup event listeners
 function setupEventListeners() {
+  // Theme toggle - THIS IS THE KEY ADDITION
+  elements.themeSwitch.addEventListener('click', toggleTheme);
+
   // Toggle recording
   elements.toggle.addEventListener('click', async () => {
     state.isRecording = !state.isRecording;
     await chrome.storage.local.set({ recordingEnabled: state.isRecording });
     updateToggleUI();
-    showToast(state.isRecording ? '✅ Recording enabled' : '⏸️ Recording paused');
+    showToast(state.isRecording ? 'Recording enabled' : 'Recording paused');
   });
 
   // Search
@@ -285,7 +310,7 @@ function setupEventListeners() {
     a.click();
     URL.revokeObjectURL(url);
     
-    showToast('✅ Export completed');
+    showToast('Export completed');
   });
 
   // Clear all
@@ -302,7 +327,7 @@ function setupEventListeners() {
       state.filteredPrompts = [];
       updateStats();
       renderPrompts();
-      showToast('✅ All prompts cleared');
+      showToast('All prompts cleared');
     }
   });
 
